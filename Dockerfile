@@ -1,15 +1,18 @@
 FROM lachlanevenson/k8s-kubectl
 
-RUN apk update \
- && apk upgrade \
- && apk add bash git yarn curl ssh \
+RUN \
 	apk -Uuv add make gcc groff less \
 		musl-dev libffi-dev openssl-dev \
-		python2-dev py-pip python3 && \
+		python2-dev py-pip && \
 	pip install awscli docker-compose && \
 	apk --purge -v del py-pip && \
-    echo "" > /root/.ash_history && \
 	rm /var/cache/apk/*
+
+RUN apk update \
+ && apk upgrade \
+ && apk add bash git yarn curl python3 \
+ && rm -rf /var/cache/*/* \
+ && echo "" > /root/.ash_history
 
 # change default shell from ash to bash
 RUN sed -i -e "s/bin\/ash/bin\/bash/" /etc/passwd
