@@ -1,13 +1,5 @@
 FROM lachlanevenson/k8s-kubectl
 
-RUN \
-	apk -Uuv add make gcc groff less \
-		musl-dev libffi-dev openssl-dev \
-		python2-dev py-pip && \
-	pip install awscli docker-compose && \
-	apk --purge -v del py-pip && \
-	rm /var/cache/apk/*
-
 RUN apk update \
  && apk upgrade \
  && apk add bash git yarn curl python3 \
@@ -16,6 +8,10 @@ RUN apk update \
 
 # change default shell from ash to bash
 RUN sed -i -e "s/bin\/ash/bin\/bash/" /etc/passwd
+
+RUN curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip" \
+    && unzip awscliv2.zip \
+    && ./aws/install
 
 RUN yarn global add lerna
 
